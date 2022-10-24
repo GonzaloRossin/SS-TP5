@@ -21,6 +21,11 @@ public class Vector2 {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
+    public double distSquared(Vector2 v) {
+        double dx = x - v.getX(), dy = y - v.getY();
+        return dx * dx + dy * dy;
+    }
+
     public Vector2 getOrthogonal() {
         return new Vector2(-y, x);
     }

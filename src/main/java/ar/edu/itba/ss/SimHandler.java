@@ -5,12 +5,24 @@ import java.util.List;
 
 public class SimHandler {
     private final List<Particle> particles = new ArrayList<>();
+    private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
     private double tf = 100;
 
     public SimHandler() {
-        particles.add(new Particle(new Vector2(35, 10), new Vector2(0, 0), 1, 1));
+        generateWalls();
+        particles.add(new Particle(new Vector2(10, 35), new Vector2(0, 0), 1, 1));
+    }
+
+    private void generateWalls() {
+        walls.add(new Wall(new Vector2(0, 0), new Vector2(0, 70)));
+
+        walls.add(new Wall(new Vector2(0, 0), new Vector2(20, 0)));
+
+        walls.add(new Wall(new Vector2(20, 0), new Vector2(20, 70)));
+
+        walls.add(new Wall(new Vector2(0, 70), new Vector2(20, 70)));
     }
 
     public void initParticlesPositions() {
@@ -36,12 +48,23 @@ public class SimHandler {
     }
 
     public String printWalls() {
-        return "";
+        StringBuilder sb = new StringBuilder();
+        for(Wall w : walls) {
+            sb.append(w.toXYZ());
+        }
+        return sb.toString();
+    }
+
+    public int wallsSize() {
+        int accum = 0;
+        for (Wall wall : walls) {
+            accum += wall.wallXYZSize();
+        }
+        return accum;
     }
 
     public String printSystem() {
-        String.format("%d\n\n%s%s", particles.size() /* + walls.size()*/, printParticles(), printWalls());
-        return printParticles() + printWalls();
+        return String.format("%d\n\n%s%s", particles.size() + wallsSize(), printParticles(), printWalls());
     }
 
     public double getActualTime() {

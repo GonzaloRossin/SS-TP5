@@ -2,3 +2,5 @@
 target/classes/ar/edu/itba/ss/
 
 .idea/
+
+*.class

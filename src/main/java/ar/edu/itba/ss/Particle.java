@@ -7,6 +7,7 @@ public class Particle {
     private Vector2 actualR, lastR = new Vector2(0,0), actualV, actualForce;
     private final double mass, radius;
     private final double g = 980;
+    private final int color = 0;
 
     public Particle(Vector2 actualR, Vector2 actualV, double mass, double radius) {
         this.actualR = actualR;
@@ -74,7 +75,6 @@ public class Particle {
     }
 
     public String toXYZ() {
-        return String.format(Locale.US,"%f %f %f\n", actualR.getX(), actualR.getY(), radius);
+        return String.format(Locale.US,"%f %f %f %d\n", actualR.getX(), actualR.getY(), radius, color);
     }
-
 }
