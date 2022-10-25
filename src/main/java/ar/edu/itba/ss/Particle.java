@@ -6,7 +6,7 @@ import java.util.Locale;
 public class Particle {
     private Vector2 actualR, lastR = new Vector2(0,0), actualV, actualForce;
     private final double mass, radius;
-    private final double g = 980;
+    private final double g = 980, Kn = 250000, Kt = 500;
     private final int color = 0;
 
     public Particle(Vector2 actualR, Vector2 actualV, double mass, double radius) {
@@ -16,10 +16,38 @@ public class Particle {
         this.radius = radius;
     }
 
-    public Vector2 calculateForceSum() {
-        Vector2 newForce = new Vector2(0,0);
+    public Vector2 calculateForceSum(List<Particle> particles, List<Wall> walls) {
+        Vector2 newForce = calculateGravity();
 
-        return newForce.sum(calculateGravity());
+        // Check overlap with walls, if overlapped calculate force
+        for (Wall w : walls) {
+            double overlap = calculateOverlap(w);
+            if (overlap > 0) {
+                newForce = newForce.sum(calculateForce(w, overlap));
+            }
+        }
+
+        // Check overlap with particles, if overlapped calculate force
+        for (Particle p : particles) {
+
+        }
+
+        return newForce;
+    }
+
+    private Vector2 calculateForce(Wall w, double overlap) {
+        Vector2 normalVersor = w.getNormalVersor();
+        Vector2 tangVersor = normalVersor.getOrthogonal();
+        Vector2 normalComponent = normalVersor.scalarProduct(-Kn * overlap);
+
+        double term1 = actualV.innerProduct(tangVersor);
+        Vector2 tangComponent = tangVersor.scalarProduct(-Kt * overlap * term1);
+        return normalComponent.sum(tangComponent);
+    }
+
+    private double calculateOverlap(Wall w) {
+        double distanceToWall = w.distanceToPoint(this);
+        return radius - distanceToWall;
     }
 
     private Vector2 calculateGravity() {
@@ -27,9 +55,9 @@ public class Particle {
         return gravityVersor.scalarProduct(g);
     }
 
-    public void applyEulerModified(/* List<Planet> planets,*/ double step) {
+    public void applyEulerModified(List<Particle> particles, List<Wall> walls, double step) {
         Vector2 lastForce = actualForce;
-        actualForce = calculateForceSum();
+        actualForce = calculateForceSum(particles, walls);
 
         Vector2 a = actualForce.scalarProduct(1/mass);
 
@@ -44,9 +72,9 @@ public class Particle {
         actualR = actualR.sum(term1).sum(term2);
     }
 
-    public Double applyBeeman(/* List<Planet> planets,*/ double step) {
+    public Double applyBeeman(List<Particle> particles, List<Wall> walls, double step) {
         Vector2 lastForce = actualForce;
-        actualForce = calculateForceSum();
+        actualForce = calculateForceSum(particles, walls);
 
         Vector2 actualA = actualForce.scalarProduct(1.0/mass);
         Vector2 lastA = lastForce.scalarProduct(1.0/mass);
@@ -62,7 +90,7 @@ public class Particle {
         Vector2 predictV = actualV.sum(actualA.scalarProduct((3.0/2.0) * step)).substract(lastA.scalarProduct((1.0/2.0) * step));
 
         // Calculate force in t + step
-        Vector2 nextForce = calculateForceSum();
+        Vector2 nextForce = calculateForceSum(particles, walls);
         Vector2 nextA = nextForce.scalarProduct(1.0/mass);
 
         // Calculate corrected velocity
@@ -76,5 +104,9 @@ public class Particle {
 
     public String toXYZ() {
         return String.format(Locale.US,"%f %f %f %d\n", actualR.getX(), actualR.getY(), radius, color);
+    }
+
+    public Vector2 getActualR() {
+        return actualR;
     }
 }
