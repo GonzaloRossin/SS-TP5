@@ -12,7 +12,7 @@ public class SimHandler {
     private double tf = 25;
     private int N = 200;
 
-    private double A = 0.15, w = 10, D = 5;
+    private double A = 0.15, w = 10, D = 10;
 
     public SimHandler() {
         generateWalls();

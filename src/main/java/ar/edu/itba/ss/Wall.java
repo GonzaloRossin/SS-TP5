@@ -45,8 +45,18 @@ public class Wall {
         return numerator / denominator;
     }
 
-    public Vector2 getNormalVersor() {
-        return startPoint.substract(endPoint).normalize().getOrthogonal();
+    public Vector2 getNormalVersor(Particle p) {
+        double segmentDist = startPoint.distanceTo(endPoint);
+        if (startPoint.distanceTo(p.getActualR()) < segmentDist && endPoint.distanceTo(p.getActualR()) < segmentDist) {
+            // Funcionamiento normal de la pared
+            return startPoint.substract(endPoint).normalize().getOrthogonal();
+        } else if (startPoint.distanceTo(p.getActualR()) < endPoint.distanceTo(p.getActualR())) {
+            // En esta caso impacta contra el startPoint
+            return startPoint.substract(p.getActualR()).normalize();
+        } else {
+            // En este caso impacta contra el endpoint
+            return endPoint.substract(p.getActualR()).normalize();
+        }
     }
 
     public void oscillate(double actualTime) {

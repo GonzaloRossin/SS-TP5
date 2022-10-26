@@ -24,7 +24,7 @@ public class Particle {
             double overlap = calculateOverlap(w);
             if (overlap > 0) {
                 if (w.isColliding(this)) {
-                    Vector2 normalVersor = w.getNormalVersor();
+                    Vector2 normalVersor = w.getNormalVersor(this);
                     newForce = newForce.sum(calculateForce(normalVersor, overlap, vel));
                 }
             }
