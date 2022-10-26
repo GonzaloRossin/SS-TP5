@@ -9,8 +9,10 @@ public class SimHandler {
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 10;
+    private double tf = 100;
     private int N = 200;
+
+    private double A = 0.15, w = 50;
 
     public SimHandler() {
         generateWalls();
@@ -41,13 +43,13 @@ public class SimHandler {
     }
 
     private void generateWalls() {
-        walls.add(new Wall(new Vector2(0, 70), new Vector2(0, 0)));
+        walls.add(new Wall(new Vector2(0, 70), new Vector2(0, 0), A, w));
 
-        walls.add(new Wall(new Vector2(0, 0), new Vector2(20, 0)));
+        walls.add(new Wall(new Vector2(0, 0), new Vector2(20, 0), A, w));
 
-        walls.add(new Wall(new Vector2(20, 0), new Vector2(20, 70)));
+        walls.add(new Wall(new Vector2(20, 0), new Vector2(20, 70), A, w));
 
-        walls.add(new Wall(new Vector2(20, 70), new Vector2(0, 70)));
+        walls.add(new Wall(new Vector2(20, 70), new Vector2(0, 70), A, w));
     }
 
     public void initParticlesPositions() {
@@ -60,6 +62,9 @@ public class SimHandler {
     public void iterate() {
         for(Particle p : particles) {
             p.applyBeeman(particles, walls, step);
+        }
+        for(Wall w: walls) {
+            w.oscillate(actualTime);
         }
         actualTime += step;
     }

@@ -5,10 +5,6 @@ import java.io.PrintWriter;
 import static ar.edu.itba.ss.Utils.openFile;
 import static ar.edu.itba.ss.Utils.writeToFile;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
     public static void main( String[] args )
@@ -18,7 +14,7 @@ public class App
 
         writeToFile(pw, sh.printSystem());
 
-        double outerStep = 0.01, lastTime = sh.getActualTime();
+        double outerStep = 0.05, lastTime = sh.getActualTime();
         sh.initParticlesPositions();
         while(sh.getActualTime() < sh.getTf()) {
             sh.iterate();

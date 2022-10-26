@@ -4,12 +4,17 @@ import java.util.Locale;
 
 public class Wall {
     private Vector2 startPoint, endPoint;
-    private double xyzRadius = 0.25;
+    private Vector2 startPointRef, endPointRef;
+    private double xyzRadius = 0.25, A, w;
     private int color = 100;
 
-    public Wall(Vector2 startPoint, Vector2 endPoint) {
+    public Wall(Vector2 startPoint, Vector2 endPoint, double A, double w) {
+        this.startPointRef = startPoint.clone();
+        this.endPointRef = endPoint.clone();
         this.startPoint = startPoint;
         this.endPoint = endPoint;
+        this.A = A;
+        this.w = w;
     }
 
     public String toXYZ() {
@@ -42,5 +47,10 @@ public class Wall {
 
     public Vector2 getNormalVersor() {
         return startPoint.substract(endPoint).normalize().getOrthogonal();
+    }
+
+    public void oscillate(double actualTime) {
+        startPoint = startPointRef.sum(new Vector2(0, A * Math.sin(w * actualTime)));
+        endPoint = endPointRef.sum(new Vector2(0, A * Math.sin(w * actualTime)));
     }
 }
