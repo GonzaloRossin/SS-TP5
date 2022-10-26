@@ -23,8 +23,10 @@ public class Particle {
         for (Wall w : walls) {
             double overlap = calculateOverlap(w);
             if (overlap > 0) {
-                Vector2 normalVersor = w.getNormalVersor();
-                newForce = newForce.sum(calculateForce(normalVersor, overlap, vel));
+                if (w.isColliding(this)) {
+                    Vector2 normalVersor = w.getNormalVersor();
+                    newForce = newForce.sum(calculateForce(normalVersor, overlap, vel));
+                }
             }
         }
 

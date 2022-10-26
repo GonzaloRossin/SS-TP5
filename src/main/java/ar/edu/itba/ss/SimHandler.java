@@ -9,16 +9,16 @@ public class SimHandler {
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 100;
+    private double tf = 25;
     private int N = 200;
 
-    private double A = 0.15, w = 50, D = 5;
+    private double A = 0.15, w = 10, D = 5;
 
     public SimHandler() {
         generateWalls();
-//        generateParticles();
-        particles.add(new Particle(new Vector2(5, 30), new Vector2(2, 0), 1, 1));
-        particles.add(new Particle(new Vector2(15, 30), new Vector2(-2, 0), 1, 1));
+        generateParticles();
+//        particles.add(new Particle(new Vector2(8.30, 30), new Vector2(0, 0), 1, 1));
+//        particles.add(new Particle(new Vector2(15, 30), new Vector2(0, 0), 1, 1));
     }
 
     public void generateParticles() {

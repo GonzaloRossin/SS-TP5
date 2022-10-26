@@ -53,4 +53,9 @@ public class Wall {
         startPoint = startPointRef.sum(new Vector2(0, A * Math.sin(w * actualTime)));
         endPoint = endPointRef.sum(new Vector2(0, A * Math.sin(w * actualTime)));
     }
+
+    public boolean isColliding(Particle p) {
+        double segmentDist = startPoint.distanceTo(endPoint) + p.getRadius(); // Could be buggy
+        return startPoint.distanceTo(p.getActualR()) < segmentDist && endPoint.distanceTo(p.getActualR()) < segmentDist;
+    }
 }
