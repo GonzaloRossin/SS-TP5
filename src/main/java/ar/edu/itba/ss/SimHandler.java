@@ -12,13 +12,13 @@ public class SimHandler {
     private double tf = 100;
     private int N = 200;
 
-    private double A = 0.15, w = 50;
+    private double A = 0.15, w = 50, D = 5;
 
     public SimHandler() {
         generateWalls();
-        generateParticles();
-//        particles.add(new Particle(new Vector2(5, 30), new Vector2(100, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(15, 30), new Vector2(-100, 0), 1, 1));
+//        generateParticles();
+        particles.add(new Particle(new Vector2(5, 30), new Vector2(2, 0), 1, 1));
+        particles.add(new Particle(new Vector2(15, 30), new Vector2(-2, 0), 1, 1));
     }
 
     public void generateParticles() {
@@ -45,7 +45,9 @@ public class SimHandler {
     private void generateWalls() {
         walls.add(new Wall(new Vector2(0, 70), new Vector2(0, 0), A, w));
 
-        walls.add(new Wall(new Vector2(0, 0), new Vector2(20, 0), A, w));
+        walls.add(new Wall(new Vector2(0, 0), new Vector2(20.0 / 2 - D / 2, 0), A, w));
+
+        walls.add(new Wall(new Vector2(20.0 / 2 + D / 2, 0), new Vector2(20, 0), A, w));
 
         walls.add(new Wall(new Vector2(20, 0), new Vector2(20, 70), A, w));
 

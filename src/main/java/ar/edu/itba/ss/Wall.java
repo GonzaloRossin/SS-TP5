@@ -22,7 +22,7 @@ public class Wall {
 //        sb.append( String.format(Locale.US,"%f %f %d %d\n", startPoint.getX(), startPoint.getY(), xyzRadius, color));
 //        sb.append( String.format(Locale.US,"%f %f %d %d\n", endPoint.getX(), endPoint.getY(), xyzRadius, color));
         Vector2 lineVersor = endPoint.substract(startPoint).normalize();
-        Vector2 current = startPoint.clone();
+        Vector2 current = startPoint.sum(lineVersor.scalarProduct(xyzRadius));
         for (int i = 0; i < wallXYZSize(); i++) {
             sb.append( String.format(Locale.US,"%f %f %f %d\n", current.getX(), current.getY(), xyzRadius, color));
             current = current.sum(lineVersor.scalarProduct(xyzRadius * 2));
@@ -31,7 +31,7 @@ public class Wall {
     }
 
     public int wallXYZSize() {
-        double distance = startPoint.distanceTo(endPoint);
+        double distance = startPoint.distanceTo(endPoint) - xyzRadius * 2;
         return (int)(distance / (xyzRadius * 2)) + 1;
 //        return 2;
     }
