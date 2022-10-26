@@ -2,6 +2,7 @@ package ar.edu.itba.ss;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class SimHandler {
     private final List<Particle> particles = new ArrayList<>();
@@ -9,11 +10,34 @@ public class SimHandler {
 
     private double step = 0.001, actualTime = 0;
     private double tf = 10;
+    private int N = 200;
 
     public SimHandler() {
         generateWalls();
-        particles.add(new Particle(new Vector2(5, 3), new Vector2(100, 0), 1, 1));
-        particles.add(new Particle(new Vector2(15, 3), new Vector2(-100, 0), 1, 1));
+        generateParticles();
+//        particles.add(new Particle(new Vector2(5, 30), new Vector2(100, 0), 1, 1));
+//        particles.add(new Particle(new Vector2(15, 30), new Vector2(-100, 0), 1, 1));
+    }
+
+    public void generateParticles() {
+        Random r = new Random(0);
+        for (int i = 0; i < N;) {
+            double radius = 0.85 + r.nextDouble() * (1.15 - 0.85);
+
+            Vector2 R = new Vector2(radius + r.nextDouble() * (20 - radius * 2), radius + r.nextDouble() * (70 - radius * 2));
+            boolean ok = true;
+            for (Particle p : particles) {
+                if (R.distanceTo(p.getActualR()) < radius + p.getRadius()) {
+                    ok = false;
+                    break;
+                }
+            }
+            if (!ok) {
+                continue;
+            }
+            particles.add(new Particle(R, new Vector2(0,0), 1, radius));
+            i++;
+        }
     }
 
     private void generateWalls() {

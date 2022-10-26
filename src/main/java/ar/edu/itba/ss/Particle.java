@@ -6,7 +6,7 @@ import java.util.Locale;
 public class Particle {
     private Vector2 actualR, lastR = new Vector2(0,0), actualV, actualForce;
     private final double mass, radius;
-    private final double g = 980, Kn = 250000, Kt = 500;
+    private final double g = 980, Kn = 100000, Kt = 500;
     private final int color = 0;
 
     public Particle(Vector2 actualR, Vector2 actualV, double mass, double radius) {
@@ -122,5 +122,9 @@ public class Particle {
 
     public Vector2 getActualV() {
         return actualV;
+    }
+
+    public double getRadius() {
+        return radius;
     }
 }
