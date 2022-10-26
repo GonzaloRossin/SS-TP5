@@ -12,7 +12,8 @@ public class SimHandler {
 
     public SimHandler() {
         generateWalls();
-        particles.add(new Particle(new Vector2(10, 3), new Vector2(100, 0), 1, 1));
+        particles.add(new Particle(new Vector2(5, 3), new Vector2(100, 0), 1, 1));
+        particles.add(new Particle(new Vector2(15, 3), new Vector2(-100, 0), 1, 1));
     }
 
     private void generateWalls() {
