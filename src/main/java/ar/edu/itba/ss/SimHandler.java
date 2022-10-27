@@ -9,10 +9,10 @@ public class SimHandler {
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 25;
+    private double tf = 50;
     private int N = 200;
 
-    private double A = 0.15, w = 10, D = 10;
+    private double A = 0.30, w = 7.5, D = 3, L = 70;
 
     public SimHandler() {
         generateWalls();
@@ -24,7 +24,7 @@ public class SimHandler {
     public void generateParticles() {
         Random r = new Random(0);
         for (int i = 0; i < N;) {
-            double radius = 0.85 + r.nextDouble() * (1.15 - 0.85);
+            double radius = (0.85 + r.nextDouble() * (1.15 - 0.85));
 
             Vector2 R = new Vector2(radius + r.nextDouble() * (20 - radius * 2), radius + r.nextDouble() * (70 - radius * 2));
             boolean ok = true;
@@ -42,16 +42,38 @@ public class SimHandler {
         }
     }
 
+    public Vector2 generateNewLocation() {
+        Random r = new Random(0);
+        double radius = (0.85 + r.nextDouble() * (1.15 - 0.85));
+        boolean ok = false;
+        Vector2 R = null;
+        while (!ok) {
+            boolean overlapped = false;
+            R = new Vector2(radius + r.nextDouble() * (20 - radius * 2), 40 + r.nextDouble() * (70 - 40 - radius * 2));
+            for (Particle p : particles) {
+                if (R.distanceTo(p.getActualR()) < radius + p.getRadius()) {
+                    overlapped = true;
+                    break;
+                }
+            }
+            if (overlapped) {
+                continue;
+            }
+            ok = true;
+        }
+        return R;
+    }
+
     private void generateWalls() {
-        walls.add(new Wall(new Vector2(0, 70), new Vector2(0, 0), A, w));
+        walls.add(new Wall(new Vector2(0, L), new Vector2(0, 0), A, w));
 
         walls.add(new Wall(new Vector2(0, 0), new Vector2(20.0 / 2 - D / 2, 0), A, w));
 
         walls.add(new Wall(new Vector2(20.0 / 2 + D / 2, 0), new Vector2(20, 0), A, w));
 
-        walls.add(new Wall(new Vector2(20, 0), new Vector2(20, 70), A, w));
+        walls.add(new Wall(new Vector2(20, 0), new Vector2(20, L), A, w));
 
-        walls.add(new Wall(new Vector2(20, 70), new Vector2(0, 70), A, w));
+        walls.add(new Wall(new Vector2(20, L), new Vector2(0, L), A, w));
     }
 
     public void initParticlesPositions() {
@@ -64,11 +86,22 @@ public class SimHandler {
     public void iterate() {
         for(Particle p : particles) {
             p.applyBeeman(particles, walls, step);
+            if (isOutOfMap(p)) {
+                respawnParticle(p);
+            }
         }
         for(Wall w: walls) {
             w.oscillate(actualTime);
         }
         actualTime += step;
+    }
+
+    private void respawnParticle(Particle p) {
+        p.setActualR(generateNewLocation());
+    }
+
+    private boolean isOutOfMap(Particle p) {
+        return p.getActualR().getY() < - L / 10;
     }
 
     public String printParticles() {

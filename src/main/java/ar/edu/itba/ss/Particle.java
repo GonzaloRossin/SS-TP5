@@ -129,4 +129,8 @@ public class Particle {
     public double getRadius() {
         return radius;
     }
+
+    public void setActualR(Vector2 newR) {
+        actualR = newR;
+    }
 }
