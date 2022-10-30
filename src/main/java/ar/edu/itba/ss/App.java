@@ -13,7 +13,7 @@ public class App
         SimHandler sh = new SimHandler();
 
         writeToFile(pw, sh.printSystem());
-
+        //double w = 0.25;
         double outerStep = 0.05, lastTime = sh.getActualTime();
         sh.initParticlesPositions();
         while(sh.getActualTime() < sh.getTf()) {
