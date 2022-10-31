@@ -13,16 +13,21 @@ public class App
         SimHandler sh = new SimHandler();
 
         writeToFile(pw, sh.printSystem());
+        JsonPrinter jp = new JsonPrinter();
         //double w = 0.25;
         double outerStep = 0.05, lastTime = sh.getActualTime();
         sh.initParticlesPositions();
         while(sh.getActualTime() < sh.getTf()) {
-            sh.iterate();
+            sh.iterate(jp);
 
             if (sh.getActualTime() - lastTime > outerStep ) {
                 lastTime = sh.getActualTime();
                 writeToFile(pw, sh.printSystem());
             }
         }
+        PrintWriter pw2 = openFile("plots/QvsTime.json");
+        PrintWriter pw3 = openFile("plots/ParticlesvsTime.json");
+        writeToFile(pw2, jp.getQarray().toJSONString());
+        writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
     }
 }

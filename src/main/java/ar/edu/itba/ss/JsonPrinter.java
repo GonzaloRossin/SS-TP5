@@ -28,4 +28,12 @@ public class JsonPrinter {
         prtNumberOverTime.add(step);
         addQstep( particleCount/time, time, w);
     }
+
+    public JSONArray getQarray() {
+        return Qarray;
+    }
+
+    public JSONArray getPrtNumberOverTime() {
+        return prtNumberOverTime;
+    }
 }
