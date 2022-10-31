@@ -9,12 +9,12 @@ public class App
 {
     public static void main( String[] args )
     {
-        PrintWriter pw = openFile("output/system.xyz");
+        PrintWriter pw = openFile("output/withCIM.xyz");
         SimHandler sh = new SimHandler();
 
         writeToFile(pw, sh.printSystem());
 
-        double outerStep = 0.05, lastTime = sh.getActualTime();
+        double outerStep = 0.1, lastTime = sh.getActualTime();
         sh.initParticlesPositions();
         while(sh.getActualTime() < sh.getTf()) {
             sh.iterate();
@@ -22,6 +22,7 @@ public class App
             if (sh.getActualTime() - lastTime > outerStep ) {
                 lastTime = sh.getActualTime();
                 writeToFile(pw, sh.printSystem());
+                System.out.println(sh.getActualTime());
             }
         }
     }

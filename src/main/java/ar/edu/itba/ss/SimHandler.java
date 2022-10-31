@@ -3,6 +3,7 @@ package ar.edu.itba.ss;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class SimHandler {
     private final List<Particle> particles = new ArrayList<>();
@@ -12,20 +13,25 @@ public class SimHandler {
     private double tf = 50;
     private int N = 200;
 
-    private double A = 0.30, w = 7.5, D = 3, L = 70;
+    private double A = 0.15, w = 10, D = 3, L = 70, offset = 0.8;
+
+    private CIM cim;
 
     public SimHandler() {
         generateWalls();
         generateParticles();
-//        particles.add(new Particle(new Vector2(8.30, 30), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(15, 30), new Vector2(0, 0), 1, 1));
+//        particles.add(new Particle(new Vector2(10 + 1.5, L/2 + 1.5), new Vector2(0, 0), 1, 1));
+//        particles.add(new Particle(new Vector2(10 + offset, L/2 + 1.5), new Vector2(0, 0), 1, 1));
+//        particles.add(new Particle(new Vector2(10 - offset, L/2 + 1.5), new Vector2(0, 0), 1, 1));
+//        particles.add(new Particle(new Vector2(10 + 1.5, L/2 + offset), new Vector2(0, 0), 1, 1));
+//        particles.add(new Particle(new Vector2(10 + offset, L/2 + offset), new Vector2(0, 0), 1, 1));
+//        particles.add(new Particle(new Vector2(10 - offset, L/2 + offset), new Vector2(0, 0), 1, 1));
     }
 
     public void generateParticles() {
         Random r = new Random(0);
         for (int i = 0; i < N;) {
-            double radius = (0.85 + r.nextDouble() * (1.15 - 0.85));
-
+            double radius = 0.85 + i * (1.15 - 0.85) / N;
             Vector2 R = new Vector2(radius + r.nextDouble() * (20 - radius * 2), radius + r.nextDouble() * (70 - radius * 2));
             boolean ok = true;
             for (Particle p : particles) {
@@ -42,9 +48,8 @@ public class SimHandler {
         }
     }
 
-    public Vector2 generateNewLocation() {
-        Random r = new Random(0);
-        double radius = (0.85 + r.nextDouble() * (1.15 - 0.85));
+    public Vector2 generateNewLocation(double radius) {
+        Random r = new Random(1);
         boolean ok = false;
         Vector2 R = null;
         while (!ok) {
@@ -77,7 +82,10 @@ public class SimHandler {
     }
 
     public void initParticlesPositions() {
+        cim = new CIM(particles);
+
         for(Particle p : particles) {
+            List<Particle> neighbours = cim.calculateNeighbours(p);
             p.applyEulerModified(particles, walls, step);
         }
         actualTime += step;
@@ -85,10 +93,13 @@ public class SimHandler {
 
     public void iterate() {
         for(Particle p : particles) {
+            List<Particle> neighbours = cim.calculateNeighbours(p);
+
             p.applyBeeman(particles, walls, step);
             if (isOutOfMap(p)) {
                 respawnParticle(p);
             }
+            cim.updateParticle(p);
         }
         for(Wall w: walls) {
             w.oscillate(actualTime);
@@ -97,7 +108,8 @@ public class SimHandler {
     }
 
     private void respawnParticle(Particle p) {
-        p.setActualR(generateNewLocation());
+        p.setActualR(generateNewLocation(p.getRadius()));
+        p.setActualV(new Vector2(0,0));
     }
 
     private boolean isOutOfMap(Particle p) {
