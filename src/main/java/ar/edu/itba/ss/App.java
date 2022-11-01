@@ -11,28 +11,29 @@ public class App
 {
     public static void main( String[] args )
     {
-        PrintWriter pw = openFile("output/withCIM.xyz");
-        int[] wList = {5, 10, 15, 20, 30, 50};
+        double[] wList = {5, 10, 15, 20, 30, 50};
         for(int i = 0; i < wList.length;i++){
-            List<Integer> particleCount = new ArrayList<>();
+            PrintWriter pw = openFile("output/system.xyz");
             SimHandler sh = new SimHandler();
 
+            DataAcumulator dataAcumulator = new DataAcumulator(wList);
             writeToFile(pw, sh.printSystem());
             JsonPrinter jp = new JsonPrinter();
             sh.setW(wList[i]);
-            double outerStep = 0.1, lastTime = sh.getActualTime();
+            double outerStep = 0.05, lastTime = sh.getActualTime();
             sh.initParticlesPositions();
             while(sh.getActualTime() < sh.getTf()) {
-                sh.iterate(jp);
-                
+                sh.iterate(dataAcumulator);
+
                 if (sh.getActualTime() - lastTime > outerStep ) {
                     lastTime = sh.getActualTime();
                     writeToFile(pw, sh.printSystem());
-                    System.out.println(sh.getActualTime());
                 }
             }
-            PrintWriter pw2 = openFile("plots/QvsTime.json");
-            PrintWriter pw3 = openFile("plots/ParticlesvsTime.json");
+            PrintWriter pw2 = openFile("plots/QvsTime"+ sh.getW() +".json");
+            PrintWriter pw3 = openFile("plots/ParticlesvsTime"+sh.getW()+".json");
+            jp.createParticleArray(sh.getW(), dataAcumulator.getCountList(sh.getW()));
+            jp.createQArray(sh.getW(), dataAcumulator.getQList(sh.getW()));
             writeToFile(pw2, jp.getQarray().toJSONString());
             writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
         }

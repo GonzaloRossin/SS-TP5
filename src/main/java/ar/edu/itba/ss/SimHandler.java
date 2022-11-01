@@ -10,8 +10,8 @@ public class SimHandler {
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 3.2;
-    private int N = 200, particleCount = 0;
+    private double tf = 50;
+    private int N = 200, partcleCount = 0;
 
     private double A = 0.15, w = 10, D = 3, L = 70, offset = 0.8;
 
@@ -91,14 +91,16 @@ public class SimHandler {
         actualTime += step;
     }
 
-    public void iterate(JsonPrinter jsonPrinter) {
+    public void iterate(DataAcumulator dataAcumulator) {
+        int count = 0;
         for(Particle p : particles) {
 
             List<Particle> neighbours = cim.calculateNeighbours(p);
 
             p.applyBeeman(neighbours, walls, step);
             if (isOutOfContainer(p)){
-                particleCount++;
+                partcleCount++;
+                count++;
             }
             else if (isOutOfMap(p)) {
                 respawnParticle(p);
@@ -110,7 +112,8 @@ public class SimHandler {
             w.oscillate(actualTime);
         }
         actualTime += step;
-        jsonPrinter.addPrtNumberStep(particleCount, actualTime, w);
+        dataAcumulator.addParticleCountStep(actualTime, partcleCount, w);
+        dataAcumulator.addQ( w, actualTime, count/step);
     }
 
     private void respawnParticle(Particle p) {
@@ -156,6 +159,10 @@ public class SimHandler {
 
     public double getTf() {
         return tf;
+    }
+
+    public double getW() {
+        return w;
     }
 
     public boolean isOutOfContainer(Particle particle){
