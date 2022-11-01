@@ -3,13 +3,28 @@ package ar.edu.itba.ss;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.List;
+import java.util.Map;
+
 public class JsonPrinter {
-    private JSONArray Qarray;
-    private JSONArray prtNumberOverTime;
+    JSONArray Qarray;
+    JSONArray prtNumberOverTime;
 
     public JsonPrinter() {
         Qarray = new JSONArray();
         prtNumberOverTime = new JSONArray();
+    }
+
+    public void createParticleArray(double w,List<Pair<Double,Integer>> particleList){
+        for(Pair<Double, Integer> pair : particleList){
+            addPrtNumberStep(pair.getSecondValue(), pair.getFirstValue(), w);
+        }
+    }
+
+    public void createQArray(double w,List<Pair<Double,Double>> QList){
+        for(Pair<Double, Double> pair : QList){
+            addQstep(pair.getSecondValue(), pair.getFirstValue(), w);
+        }
     }
 
     public void addQstep(double Q, double time, double w){
