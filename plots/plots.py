@@ -2,18 +2,17 @@ import matplotlib.pylab as plt
 import pandas as pd
 
 def QvsT():
-    df = pd.read_json('QvsTime.json')
-
-    plt.plot(df['time'],df['Q'])
+    df = pd.read_json('QvsTime5.0.json')
+    plt.plot(df['time'], df['Q'])
     plt.legend()
     plt.xlabel("Tiempo [S] ", fontsize=16)
     plt.ylabel("Q", fontsize=16)
     plt.show()
 
 def parcticlesvsT():
-    df = pd.read_json('ParticlesvsTime.json')
+    df = pd.read_json('ParticlesvsTime5.0.json')
 
-    plt.plot(df['time'],df['particles'])
+    plt.plot(df['time'], df['particles'])
     plt.legend()
     plt.xlabel("Tiempo [S] ", fontsize=16)
     plt.ylabel("Partículas", fontsize=16)

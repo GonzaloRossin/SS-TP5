@@ -86,31 +86,25 @@ public class SimHandler {
 
         for(Particle p : particles) {
             List<Particle> neighbours = cim.calculateNeighbours(p);
-            p.applyEulerModified(particles, walls, step);
+            p.applyEulerModified(neighbours, walls, step);
         }
         actualTime += step;
     }
 
     public void iterate(JsonPrinter jsonPrinter) {
         for(Particle p : particles) {
-            try {
-                cim.calculateNeighbours(p);
-            }catch (IndexOutOfBoundsException i){
-                System.out.println("time: "+ actualTime);
-            }
 
-            p.applyBeeman(particles, walls, step);
+            List<Particle> neighbours = cim.calculateNeighbours(p);
+
+            p.applyBeeman(neighbours, walls, step);
             if (isOutOfContainer(p)){
                 particleCount++;
             }
             else if (isOutOfMap(p)) {
                 respawnParticle(p);
             }
-            try {
-                cim.updateParticle(p);
-            }catch (IndexOutOfBoundsException i){
-                System.out.println("time: "+ actualTime);
-            }
+
+            cim.updateParticle(p);
         }
         for(Wall w: walls) {
             w.oscillate(actualTime);
