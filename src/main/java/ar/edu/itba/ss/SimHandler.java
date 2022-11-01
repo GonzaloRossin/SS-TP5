@@ -102,7 +102,7 @@ public class SimHandler {
                 partcleCount++;
                 count++;
             }
-            else if (isOutOfMap(p)) {
+            if (isOutOfMap(p)) {
                 respawnParticle(p);
             }
 
