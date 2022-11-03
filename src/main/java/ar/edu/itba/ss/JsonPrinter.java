@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class JsonPrinter {
     JSONArray Qarray;
@@ -15,33 +16,29 @@ public class JsonPrinter {
         prtNumberOverTime = new JSONArray();
     }
 
-    public void createParticleArray(double w,List<Pair<Double,Integer>> particleList){
-        for(Pair<Double, Integer> pair : particleList){
-            addPrtNumberStep(pair.getSecondValue(), pair.getFirstValue(), w);
+    public void createParticleArray(DataAcumulator dataAcumulator){
+        Set<Double> timeSet = dataAcumulator.particleCountVsTime.get(5.0).keySet();
+        for(Double time: timeSet){
+            JSONObject step = new JSONObject();
+            step.put("time", time);
+            for(Double w : dataAcumulator.particleCountVsTime.keySet()){
+                step.put(w.toString(), dataAcumulator.particleCountVsTime.get(w).get(time).getAverage());
+            }
+            prtNumberOverTime.add(step);
         }
+
     }
 
-    public void createQArray(double w,List<Pair<Double,Double>> QList){
-        for(Pair<Double, Double> pair : QList){
-            addQstep(pair.getSecondValue(), pair.getFirstValue(), w);
+    public void createQArray(DataAcumulator dataAcumulator){
+        Set<Double> timeSet = dataAcumulator.QoverTime.get(5.0).keySet();
+        for(Double time: timeSet){
+            JSONObject step = new JSONObject();
+            step.put("time", time);
+            for(Double w : dataAcumulator.QoverTime.keySet()){
+                step.put(w.toString(), dataAcumulator.QoverTime.get(w).get(time).getAverage());
+            }
+            Qarray.add(step);
         }
-    }
-
-    public void addQstep(double Q, double time, double w){
-        JSONObject qStep = new JSONObject();
-        qStep.put("Q", Q);
-        qStep.put("time", time);
-        qStep.put("w", w);
-        Qarray.add(qStep);
-    }
-
-    public void addPrtNumberStep(int particleCount, double time, double w){
-        JSONObject step = new JSONObject();
-        step.put("particles", particleCount);
-        step.put("time", time);
-        step.put("w", w);
-        prtNumberOverTime.add(step);
-        addQstep( particleCount/time, time, w);
     }
 
     public JSONArray getQarray() {

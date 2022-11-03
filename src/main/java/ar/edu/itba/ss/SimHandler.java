@@ -10,7 +10,7 @@ public class SimHandler {
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 50;
+    private double tf = 25;
     private int N = 200, partcleCount = 0;
 
     private double A = 0.15, w = 10, D = 3, L = 70, offset = 0.8;
@@ -91,7 +91,7 @@ public class SimHandler {
         actualTime += step;
     }
 
-    public void iterate(DataAcumulator dataAcumulator) {
+    public void iterate(DataAcumulator dataAcumulator, int run) {
         int count = 0;
         for(Particle p : particles) {
 
@@ -100,6 +100,7 @@ public class SimHandler {
             p.applyBeeman(neighbours, walls, step);
             if (isOutOfContainer(p)){
                 partcleCount++;
+                p.setOutOfSilo(true);
                 count++;
             }
             if (isOutOfMap(p)) {
@@ -112,13 +113,14 @@ public class SimHandler {
             w.oscillate(actualTime);
         }
         actualTime += step;
-        dataAcumulator.addParticleCountStep(actualTime, partcleCount, w);
-        dataAcumulator.addQ( w, actualTime, count/step);
+        dataAcumulator.addParticleCountStep(actualTime, partcleCount, w, run);
+        dataAcumulator.addQ( w, actualTime, count/step, run);
     }
 
     private void respawnParticle(Particle p) {
         p.setActualR(generateNewLocation(p.getRadius()));
         p.setActualV(new Vector2(0,0));
+        p.setOutOfSilo(false);
     }
 
     private boolean isOutOfMap(Particle p) {
@@ -166,7 +168,7 @@ public class SimHandler {
     }
 
     public boolean isOutOfContainer(Particle particle){
-        return particle.getActualR().getY() <= 0;
+        return particle.getActualR().getY() <= -particle.getRadius() && !particle.isOutOfSilo();
     }
 
     public void setW(double w) {

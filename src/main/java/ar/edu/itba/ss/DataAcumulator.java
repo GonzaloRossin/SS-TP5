@@ -1,36 +1,41 @@
 package ar.edu.itba.ss;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DataAcumulator {
-    Map<Double, List<Pair<Double, Integer>>> particleCountVsTime;
-    Map<Double, List<Pair<Double, Double>>> QoverTime;
+    Map<Double, Map<Double,DataPackage<Double>>> particleCountVsTime;
+    Map<Double, Map<Double,DataPackage<Double>>> QoverTime;
 
     public DataAcumulator(double[] wList) {
         particleCountVsTime = new HashMap<>();
         QoverTime = new HashMap<>();
         for (int i = 0; i < wList.length; i++) {
-            particleCountVsTime.put(wList[i], new ArrayList<Pair<Double,Integer>>());
-            QoverTime.put(wList[i], new ArrayList<Pair<Double,Double>>());
+            particleCountVsTime.put(wList[i], new HashMap<Double, DataPackage<Double>>());
+            QoverTime.put(wList[i], new HashMap<Double, DataPackage<Double>>());
         }
 
     }
 
-    public void addParticleCountStep(double time, int count, double w){
-        particleCountVsTime.get(w).add(new Pair<>(time, count));
+    public void addParticleCountStep(double time, int count, double w, int run){
+        if(run == 0){
+            DataPackage<Double> step = new DataPackage<>();
+            step.addValue((double) count);
+            particleCountVsTime.get(w).put(time, step);
+        }
+        else{
+            particleCountVsTime.get(w).get(time).addValue((double) count);
+        }
     }
 
-    public void addQ(double w, double time, double Q){
-        QoverTime.get(w).add(new Pair<>(time, Q));
+    public void addQ(double w, double time, double Q, int run){
+        if(run == 0){
+            DataPackage<Double> step = new DataPackage<>();
+            step.addValue(Q);
+            QoverTime.get(w).put(time, step);
+        }else {
+            QoverTime.get(w).get(time).addValue(Q);
+        }
     }
 
-    public List<Pair<Double, Integer>> getCountList(double w){
-        return particleCountVsTime.get(w);
-    }
-    public List<Pair<Double, Double>> getQList(double w){
-        return QoverTime.get(w);
-    }
 }

@@ -7,8 +7,9 @@ import java.util.Set;
 public class Particle {
     private Vector2 actualR, lastR = new Vector2(0,0), actualV, actualForce;
     private final double mass, radius;
-    private final double g = 5, Kn = 250, Kt = 500;
+    private final double g = 5, Kn = 350, Kt = 500;
     private final int color = 0;
+    private boolean outOfSilo = false;
 
     private int cellX, cellY, cellIndex;
 
@@ -148,6 +149,14 @@ public class Particle {
 
     public int getCellY() {
         return cellY;
+    }
+
+    public boolean isOutOfSilo() {
+        return outOfSilo;
+    }
+
+    public void setOutOfSilo(boolean outOfSilo) {
+        this.outOfSilo = outOfSilo;
     }
 
     public void setCellCoords(int Mx, int My, double Lx, double Ly, double xOffset, double yOffset) {
