@@ -15,6 +15,7 @@ public class XYZmain {
 
         DataAcumulator dataAcumulator = new DataAcumulator(wList);
         writeToFile(pw, sh.printSystem());
+        sh.setW(wList[0]);
         double outerStep = 0.05, lastTime = sh.getActualTime();
         sh.initParticlesPositions();
         while(sh.getActualTime() < sh.getTf()) {

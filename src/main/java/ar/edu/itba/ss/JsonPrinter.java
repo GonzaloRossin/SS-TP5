@@ -3,8 +3,9 @@ package ar.edu.itba.ss;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class JsonPrinter {
@@ -18,7 +19,9 @@ public class JsonPrinter {
 
     public void createParticleArray(DataAcumulator dataAcumulator){
         Set<Double> timeSet = dataAcumulator.particleCountVsTime.get(5.0).keySet();
-        for(Double time: timeSet){
+        List<Double> sortedTimes =  new ArrayList<>(timeSet);
+        Collections.sort(sortedTimes);
+        for(Double time: sortedTimes){
             JSONObject step = new JSONObject();
             step.put("time", time);
             for(Double w : dataAcumulator.particleCountVsTime.keySet()){
@@ -30,12 +33,14 @@ public class JsonPrinter {
     }
 
     public void createQArray(DataAcumulator dataAcumulator){
-        Set<Double> timeSet = dataAcumulator.QoverTime.get(5.0).keySet();
-        for(Double time: timeSet){
+        Set<Double> particleSet = dataAcumulator.QoverTime.keySet();
+        List<Double> sortedParticleCount =  new ArrayList<>(particleSet);
+        Collections.sort(sortedParticleCount);
+        for(Double particleCount: sortedParticleCount){
             JSONObject step = new JSONObject();
-            step.put("time", time);
-            for(Double w : dataAcumulator.QoverTime.keySet()){
-                step.put(w.toString(), dataAcumulator.QoverTime.get(w).get(time).getAverage());
+            step.put("particleCount", particleCount);
+            for(Double w : dataAcumulator.QoverTime.get(particleCount).keySet()){
+                step.put(w.toString(), dataAcumulator.QoverTime.get(particleCount).get(w).getAverage());
             }
             Qarray.add(step);
         }

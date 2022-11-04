@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import static java.lang.Math.round;
+
 public class SimHandler {
     private final List<Particle> particles = new ArrayList<>();
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 25;
-    private int N = 200, partcleCount = 0;
+    private double tf = 400;
+    private int N = 200, particleCount = 0;
 
     private double A = 0.15, w = 10, D = 3, L = 70, offset = 0.8;
 
@@ -92,16 +94,14 @@ public class SimHandler {
     }
 
     public void iterate(DataAcumulator dataAcumulator, int run) {
-        int count = 0;
         for(Particle p : particles) {
 
             List<Particle> neighbours = cim.calculateNeighbours(p);
 
             p.applyBeeman(neighbours, walls, step);
             if (isOutOfContainer(p)){
-                partcleCount++;
+                particleCount++;
                 p.setOutOfSilo(true);
-                count++;
             }
             if (isOutOfMap(p)) {
                 respawnParticle(p);
@@ -113,8 +113,10 @@ public class SimHandler {
             w.oscillate(actualTime);
         }
         actualTime += step;
-        dataAcumulator.addParticleCountStep(actualTime, partcleCount, w, run);
-        dataAcumulator.addQ( w, actualTime, count/step, run);
+        dataAcumulator.addParticleCountStep(actualTime, particleCount, w, run);
+        if(particleCount % 10 == 0){
+            dataAcumulator.addQ( w, particleCount, particleCount / actualTime, run);
+        }
     }
 
     private void respawnParticle(Particle p) {

@@ -12,7 +12,6 @@ public class DataAcumulator {
         QoverTime = new HashMap<>();
         for (int i = 0; i < wList.length; i++) {
             particleCountVsTime.put(wList[i], new HashMap<Double, DataPackage<Double>>());
-            QoverTime.put(wList[i], new HashMap<Double, DataPackage<Double>>());
         }
 
     }
@@ -28,13 +27,14 @@ public class DataAcumulator {
         }
     }
 
-    public void addQ(double w, double time, double Q, int run){
+    public void addQ(double w, int particleCount, double Q, int run){
         if(run == 0){
             DataPackage<Double> step = new DataPackage<>();
             step.addValue(Q);
-            QoverTime.get(w).put(time, step);
+            QoverTime.put((double) particleCount, new HashMap<Double, DataPackage<Double>>());
+            QoverTime.get((double) particleCount).put(w, step);
         }else {
-            QoverTime.get(w).get(time).addValue(Q);
+            QoverTime.get((double) particleCount).get(w).addValue(Q);
         }
     }
 
