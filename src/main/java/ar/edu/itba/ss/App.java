@@ -15,26 +15,27 @@ public class App
         DataAcumulator dataAcumulator = new DataAcumulator(wList);
         JsonPrinter jp = new JsonPrinter();
         for (double v : wList) {
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < 3; j++) {
                 SimHandler sh = new SimHandler();
                 sh.setW(v);
                 double outerStep = 0.05, lastTime = sh.getActualTime();
                 sh.initParticlesPositions();
                 while (sh.getActualTime() < sh.getTf()) {
-                    sh.iterate(dataAcumulator, j);
+                    sh.iterate(dataAcumulator,j);
 
                     if (sh.getActualTime() - lastTime > outerStep) {
                         lastTime = sh.getActualTime();
                     }
                 }
+                dataAcumulator.setTimeArrayCompleted(true);
             }
 
         }
-        PrintWriter pw2 = openFile("plots/QvsTime.json");
-        PrintWriter pw3 = openFile("plots/ParticlesvsTime.json");
+        dataAcumulator.calculateAverageList();
+        PrintWriter pw3 = openFile("plots/ParticlesvsTime1.json");
+        PrintWriter pw2 = openFile("plots/Qlist.json");
         jp.createParticleArray(dataAcumulator);
-        jp.createQArray(dataAcumulator);
-        writeToFile(pw2, jp.getQarray().toJSONString());
         writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
+        writeToFile(pw2, jp.getQarray().toJSONString());
     }
 }

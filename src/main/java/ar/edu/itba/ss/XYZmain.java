@@ -9,7 +9,7 @@ public class XYZmain {
 
     public static void main(String[] args){
 
-        double[] wList = {5};
+        double[] wList = {20};
         PrintWriter pw = openFile("output/system.xyz");
         SimHandler sh = new SimHandler();
 

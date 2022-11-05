@@ -12,7 +12,7 @@ public class SimHandler {
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 400;
+    private double tf = 900;
     private int N = 200, particleCount = 0;
 
     private double A = 0.15, w = 10, D = 3, L = 70, offset = 0.8;
@@ -22,12 +22,6 @@ public class SimHandler {
     public SimHandler() {
         generateWalls();
         generateParticles();
-//        particles.add(new Particle(new Vector2(10 + 1.5, L/2 + 1.5), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 + offset, L/2 + 1.5), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 - offset, L/2 + 1.5), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 + 1.5, L/2 + offset), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 + offset, L/2 + offset), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 - offset, L/2 + offset), new Vector2(0, 0), 1, 1));
     }
 
     public void generateParticles() {

@@ -53,7 +53,6 @@ def ej2(particles, times, ds):
     q_errors = []
     for i in range(len(ds)):
         aux = np.polyfit(times[i], particles[i], 1)
-        print(aux)
         qs.append(aux[1] / aux[0])
         q_errors.append(i + 1)
     plt.scatter(ds, qs)
@@ -62,15 +61,4 @@ def ej2(particles, times, ds):
     plt.ylabel("Q", fontsize=16)
     plt.show()
 
-def appendFrequency():
-    df = pd.read_json('ParticlesvsTime.json')
-    df2 = pd.read_json('ParticlesvsTime2.json')
-    df3 = pd.read_json('ParticlesvsTime3.json')
-    df4 = pd.read_json('ParticlesvsTime4.json')
-
-    frequencyLists = []
-    frecuencias = [5.0, 10.0, 15.0, 20.0, 30.0, 50.0]
-    for frecuencia in frecuencias:
-        frequencyList = []
-        frequencyList.append(df[str(frecuencia)])
 ej1()
