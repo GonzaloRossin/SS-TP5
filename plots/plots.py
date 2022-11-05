@@ -11,7 +11,6 @@ def QvsT():
 
 def parcticlesvsT():
     df = pd.read_json('ParticlesvsTime.json')
-
     plt.plot(df['time'], df['5.0'], label='5')
     plt.plot(df['time'], df['10.0'], label='10')
     plt.plot(df['time'], df['15.0'], label='15')
@@ -37,5 +36,4 @@ pGCP = df['pGCP']
 pVerlet = df['pVerlet']
 x = df['time']'''
 
-QvsT()
 parcticlesvsT()

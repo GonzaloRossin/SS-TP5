@@ -32,24 +32,6 @@ public class JsonPrinter {
 
     }
 
-    public void createQArray(DataAcumulator dataAcumulator){
-        Set<Double> particleSet = dataAcumulator.QoverTime.keySet();
-        List<Double> sortedParticleCount =  new ArrayList<>(particleSet);
-        Collections.sort(sortedParticleCount);
-        for(Double particleCount: sortedParticleCount){
-            JSONObject step = new JSONObject();
-            step.put("particleCount", particleCount);
-            for(Double w : dataAcumulator.QoverTime.get(particleCount).keySet()){
-                step.put(w.toString(), dataAcumulator.QoverTime.get(particleCount).get(w).getAverage());
-            }
-            Qarray.add(step);
-        }
-    }
-
-    public JSONArray getQarray() {
-        return Qarray;
-    }
-
     public JSONArray getPrtNumberOverTime() {
         return prtNumberOverTime;
     }

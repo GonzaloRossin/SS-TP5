@@ -114,9 +114,6 @@ public class SimHandler {
         }
         actualTime += step;
         dataAcumulator.addParticleCountStep(actualTime, particleCount, w, run);
-        if(particleCount % 10 == 0){
-            dataAcumulator.addQ( w, particleCount, particleCount / actualTime, run);
-        }
     }
 
     private void respawnParticle(Particle p) {
