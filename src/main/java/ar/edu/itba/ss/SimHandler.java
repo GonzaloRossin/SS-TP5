@@ -28,7 +28,7 @@ public class SimHandler {
     }
 
     public void generateParticles() {
-        Random r = new Random(0);
+        Random r = new Random(1);
         for (int i = 0; i < N;) {
             double radius = 0.85 + i * (1.15 - 0.85) / N;
             Vector2 R = new Vector2(radius + r.nextDouble() * (20 - radius * 2), radius + r.nextDouble() * (70 - radius * 2));
@@ -90,7 +90,8 @@ public class SimHandler {
         actualTime += step;
     }
 
-    public void iterate() {
+    public boolean iterate() {
+        boolean ballDrop = false;
         for(Particle p : particles) {
 
             List<Particle> neighbours = cim.calculateNeighbours(p);
@@ -99,17 +100,18 @@ public class SimHandler {
             if (isOutOfContainer(p)){
                 particleCount++;
                 p.setOutOfSilo(true);
+                ballDrop = true;
             }
             if (isOutOfMap(p)) {
                 respawnParticle(p);
             }
-
             cim.updateParticle(p);
         }
         for(Wall w: walls) {
             w.oscillate(actualTime);
         }
         actualTime += step;
+        return ballDrop;
     }
 
     private void respawnParticle(Particle p) {
