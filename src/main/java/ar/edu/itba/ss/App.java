@@ -16,7 +16,7 @@ public class App
         JsonPrinter jp = new JsonPrinter();
         for (double v : wList) {
             for (int j = 0; j < 3; j++) {
-                SimHandler sh = new SimHandler(v,0.15);
+                SimHandler sh = new SimHandler(v,0.15, 600);
                 double outerStep = 0.05, lastTime = sh.getActualTime();
                 sh.initParticlesPositions();
                 while (sh.getActualTime() < sh.getTf()) {
@@ -44,7 +44,7 @@ public class App
         JsonPrinter jp = new JsonPrinter();
         for(double doorSize: doorSizes){
             for (int i = 0; i < 3; i++){
-                SimHandler sh = new SimHandler(5,doorSize);
+                SimHandler sh = new SimHandler(5,doorSize, 600);
 
                 double outerStep = 0.05, lastTime = sh.getActualTime();
                 sh.initParticlesPositions();

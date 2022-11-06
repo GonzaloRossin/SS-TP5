@@ -12,16 +12,17 @@ public class SimHandler {
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 900;
+    private double tf;
     private int N = 200, particleCount = 0;
 
     private double A, w, D = 3, L = 70, offset = 0.8;
 
     private CIM cim;
 
-    public SimHandler(double w, double A) {
+    public SimHandler(double w, double A, double tf) {
         this.w = w;
         this.A = A;
+        this.tf = tf;
         generateWalls();
         generateParticles();
     }
