@@ -45,4 +45,13 @@ public class JsonPrinter {
             Qarray.add(qStep);
         }
     }
+
+    public void addParticleCountOverTime(Double v, List<Double> timeArray, List<Integer> particleCounts) {
+        for(int i = 0; i < particleCounts.size(); i++){
+            JSONObject qStep = new JSONObject();
+            qStep.put("time", timeArray.get(i));
+            qStep.put(v.toString(), particleCounts.get(i));
+            prtNumberOverTime.add(qStep);
+        }
+    }
 }

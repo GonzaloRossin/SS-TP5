@@ -92,4 +92,8 @@ public class DataAcumulator {
     public List<Double> getTimeArray() {
         return timeArray;
     }
+
+    public List<Integer> getParticleCounts() {
+        return particleCounts;
+    }
 }

@@ -62,11 +62,14 @@ public class App
                 }
                 // Calculo de caudal, ya tengo toda la informacion de la tirada
                 System.out.print("" + j + " ");
+
+                // Aca al jp
+                jp.addQOverTime(v, dAccum.getTimeArray(), dAccum.getQ());
+                jp.addParticleCountOverTime(v, dAccum.getTimeArray(), dAccum.getParticleCounts());
             }
             // Calculo del error de Q para cierto w
 
-            // Aca al jp
-            jp.addQOverTime(v, dAccum.getTimeArray(), dAccum.getQ());
+
             System.out.println("Finished w = " + v);
         }
 //        dataAcumulator.calculateAverageList();
@@ -75,7 +78,7 @@ public class App
         PrintWriter pw2 = openFile("plots/Qlist.json");
 
 //        jp.createParticleArray(dAccum);
-//        writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
+        writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
         writeToFile(pw2, jp.getQarray().toJSONString());
     }
     public static void simulation() {
