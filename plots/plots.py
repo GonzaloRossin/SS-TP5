@@ -14,8 +14,8 @@ def QvsT():
     plt.ylabel("Q [1/s]", fontsize=16)
     plt.show()
 
-def parcticlesvsT():
-    df = pd.read_json('ParticlesvsTime1.json')
+def particlesvsT():
+    df = pd.read_json('ParticlesvsTime2.json')
     plt.plot(df['time'], df['5.0'], label='5')
     plt.plot(df['time'], df['10.0'], label='10')
     plt.plot(df['time'], df['15.0'], label='15')
@@ -28,5 +28,5 @@ def parcticlesvsT():
     plt.show()
 
 
-parcticlesvsT()
+particlesvsT()
 QvsT()

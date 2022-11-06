@@ -59,6 +59,15 @@ public class DataAcumulator {
             }
         }
     }
+
+    public void calculateQlist(){
+        for(int i = 0; i < timeArray.size();i++){
+            for(Double w : wlist){
+                double average = getAverage(i, w);
+                Qlist.get(w).add(average/timeArray.get(i));
+            }
+        }
+    }
     public Map<Double, List<Double>> getAverageList() {
         return averageList;
     }

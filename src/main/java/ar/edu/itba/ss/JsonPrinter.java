@@ -18,7 +18,7 @@ public class JsonPrinter {
             JSONObject qStep = new JSONObject();
             qStep.put("time", dataAcumulator.timeArray.get(i));
             step.put("time", dataAcumulator.timeArray.get(i));
-            for(Double w: dataAcumulator.particleCountVsTime1.keySet()){
+            for(Double w: dataAcumulator.averageList.keySet()){
                 step.put(w.toString(), dataAcumulator.getAverageList().get(w).get(i));
                 qStep.put(w.toString(), dataAcumulator.getQlist().get(w).get(i));
             }
