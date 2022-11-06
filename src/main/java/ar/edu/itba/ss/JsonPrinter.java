@@ -3,11 +3,6 @@ package ar.edu.itba.ss;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 public class JsonPrinter {
     JSONArray Qarray;
     JSONArray prtNumberOverTime;
@@ -18,39 +13,25 @@ public class JsonPrinter {
     }
 
     public void createParticleArray(DataAcumulator dataAcumulator){
-        Set<Double> timeSet = dataAcumulator.particleCountVsTime.get(5.0).keySet();
-        List<Double> sortedTimes =  new ArrayList<>(timeSet);
-        Collections.sort(sortedTimes);
-        for(Double time: sortedTimes){
+        for(int i = 0;i<dataAcumulator.timeArray.size();i++){
             JSONObject step = new JSONObject();
-            step.put("time", time);
-            for(Double w : dataAcumulator.particleCountVsTime.keySet()){
-                step.put(w.toString(), dataAcumulator.particleCountVsTime.get(w).get(time).getAverage());
+            JSONObject qStep = new JSONObject();
+            qStep.put("time", dataAcumulator.timeArray.get(i));
+            step.put("time", dataAcumulator.timeArray.get(i));
+            for(Double w: dataAcumulator.averageList.keySet()){
+                step.put(w.toString(), dataAcumulator.getAverageList().get(w).get(i));
+                qStep.put(w.toString(), dataAcumulator.getQlist().get(w).get(i));
             }
             prtNumberOverTime.add(step);
+            Qarray.add(qStep);
         }
-
-    }
-
-    public void createQArray(DataAcumulator dataAcumulator){
-        Set<Double> particleSet = dataAcumulator.QoverTime.keySet();
-        List<Double> sortedParticleCount =  new ArrayList<>(particleSet);
-        Collections.sort(sortedParticleCount);
-        for(Double particleCount: sortedParticleCount){
-            JSONObject step = new JSONObject();
-            step.put("particleCount", particleCount);
-            for(Double w : dataAcumulator.QoverTime.get(particleCount).keySet()){
-                step.put(w.toString(), dataAcumulator.QoverTime.get(particleCount).get(w).getAverage());
-            }
-            Qarray.add(step);
-        }
-    }
-
-    public JSONArray getQarray() {
-        return Qarray;
     }
 
     public JSONArray getPrtNumberOverTime() {
         return prtNumberOverTime;
+    }
+
+    public JSONArray getQarray() {
+        return Qarray;
     }
 }

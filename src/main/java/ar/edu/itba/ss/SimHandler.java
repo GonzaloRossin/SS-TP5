@@ -12,22 +12,19 @@ public class SimHandler {
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 400;
+    private double tf;
     private int N = 200, particleCount = 0;
 
-    private double A = 0.15, w = 10, D = 3, L = 70, offset = 0.8;
+    private double A, w, D = 3, L = 70, offset = 0.8;
 
     private CIM cim;
 
-    public SimHandler() {
+    public SimHandler(double w, double A, double tf) {
+        this.w = w;
+        this.A = A;
+        this.tf = tf;
         generateWalls();
         generateParticles();
-//        particles.add(new Particle(new Vector2(10 + 1.5, L/2 + 1.5), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 + offset, L/2 + 1.5), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 - offset, L/2 + 1.5), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 + 1.5, L/2 + offset), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 + offset, L/2 + offset), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(10 - offset, L/2 + offset), new Vector2(0, 0), 1, 1));
     }
 
     public void generateParticles() {
@@ -93,7 +90,7 @@ public class SimHandler {
         actualTime += step;
     }
 
-    public void iterate(DataAcumulator dataAcumulator, int run) {
+    public void iterate() {
         for(Particle p : particles) {
 
             List<Particle> neighbours = cim.calculateNeighbours(p);
@@ -113,10 +110,6 @@ public class SimHandler {
             w.oscillate(actualTime);
         }
         actualTime += step;
-        dataAcumulator.addParticleCountStep(actualTime, particleCount, w, run);
-        if(particleCount % 10 == 0){
-            dataAcumulator.addQ( w, particleCount, particleCount / actualTime, run);
-        }
     }
 
     private void respawnParticle(Particle p) {
@@ -165,15 +158,25 @@ public class SimHandler {
         return tf;
     }
 
-    public double getW() {
-        return w;
-    }
-
     public boolean isOutOfContainer(Particle particle){
         return particle.getActualR().getY() <= -particle.getRadius() && !particle.isOutOfSilo();
     }
 
     public void setW(double w) {
         this.w = w;
+        for(Wall wall: walls){
+
+        }
     }
+
+
+
+    public int getParticleCount() {
+        return particleCount;
+    }
+
+    public void setA(double a) {
+        A = a;
+    }
+
 }

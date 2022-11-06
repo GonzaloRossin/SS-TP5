@@ -15,26 +15,48 @@ public class App
         DataAcumulator dataAcumulator = new DataAcumulator(wList);
         JsonPrinter jp = new JsonPrinter();
         for (double v : wList) {
-            for (int j = 0; j < 2; j++) {
-                SimHandler sh = new SimHandler();
-                sh.setW(v);
+            for (int j = 0; j < 3; j++) {
+                SimHandler sh = new SimHandler(v,0.15, 600);
                 double outerStep = 0.05, lastTime = sh.getActualTime();
                 sh.initParticlesPositions();
                 while (sh.getActualTime() < sh.getTf()) {
-                    sh.iterate(dataAcumulator, j);
+                    sh.iterate();
+                    dataAcumulator.addParticleCountStep(sh.getActualTime(),sh.getParticleCount(),v,j);
+                    if (sh.getActualTime() - lastTime > outerStep) {
+                        lastTime = sh.getActualTime();
+                    }
+                }
+                dataAcumulator.setTimeArrayCompleted(true);
+            }
+
+        }
+        dataAcumulator.calculateAverageList();
+        PrintWriter pw3 = openFile("plots/ParticlesvsTime2.json");
+        PrintWriter pw2 = openFile("plots/Qlist.json");
+        jp.createParticleArray(dataAcumulator);
+        writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
+        writeToFile(pw2, jp.getQarray().toJSONString());
+    }
+    public static void doorSimulation(){
+        double[] doorSizes = {0.15, 4, 5, 6};
+        double[] wList = {5};
+        DataAcumulator dataAcumulator = new DataAcumulator(wList);
+        JsonPrinter jp = new JsonPrinter();
+        for(double doorSize: doorSizes){
+            for (int i = 0; i < 3; i++){
+                SimHandler sh = new SimHandler(5,doorSize, 600);
+
+                double outerStep = 0.05, lastTime = sh.getActualTime();
+                sh.initParticlesPositions();
+                while (sh.getActualTime() < sh.getTf()) {
+                    sh.iterate();
 
                     if (sh.getActualTime() - lastTime > outerStep) {
                         lastTime = sh.getActualTime();
                     }
                 }
+                dataAcumulator.setTimeArrayCompleted(true);
             }
-
         }
-        PrintWriter pw2 = openFile("plots/QvsTime.json");
-        PrintWriter pw3 = openFile("plots/ParticlesvsTime.json");
-        jp.createParticleArray(dataAcumulator);
-        jp.createQArray(dataAcumulator);
-        writeToFile(pw2, jp.getQarray().toJSONString());
-        writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
     }
 }
