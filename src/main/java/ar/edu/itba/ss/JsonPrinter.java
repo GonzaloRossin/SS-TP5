@@ -3,9 +3,6 @@ package ar.edu.itba.ss;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.List;
-import java.util.Map;
-
 public class JsonPrinter {
     JSONArray Qarray;
     JSONArray prtNumberOverTime;
@@ -15,40 +12,26 @@ public class JsonPrinter {
         prtNumberOverTime = new JSONArray();
     }
 
-    public void createParticleArray(double w,List<Pair<Double,Integer>> particleList){
-        for(Pair<Double, Integer> pair : particleList){
-            addPrtNumberStep(pair.getSecondValue(), pair.getFirstValue(), w);
+    public void createParticleArray(DataAcumulator dataAcumulator){
+        for(int i = 0;i<dataAcumulator.timeArray.size();i++){
+            JSONObject step = new JSONObject();
+            JSONObject qStep = new JSONObject();
+            qStep.put("time", dataAcumulator.timeArray.get(i));
+            step.put("time", dataAcumulator.timeArray.get(i));
+            for(Double w: dataAcumulator.averageList.keySet()){
+                step.put(w.toString(), dataAcumulator.getAverageList().get(w).get(i));
+                qStep.put(w.toString(), dataAcumulator.getQlist().get(w).get(i));
+            }
+            prtNumberOverTime.add(step);
+            Qarray.add(qStep);
         }
-    }
-
-    public void createQArray(double w,List<Pair<Double,Double>> QList){
-        for(Pair<Double, Double> pair : QList){
-            addQstep(pair.getSecondValue(), pair.getFirstValue(), w);
-        }
-    }
-
-    public void addQstep(double Q, double time, double w){
-        JSONObject qStep = new JSONObject();
-        qStep.put("Q", Q);
-        qStep.put("time", time);
-        qStep.put("w", w);
-        Qarray.add(qStep);
-    }
-
-    public void addPrtNumberStep(int particleCount, double time, double w){
-        JSONObject step = new JSONObject();
-        step.put("particles", particleCount);
-        step.put("time", time);
-        step.put("w", w);
-        prtNumberOverTime.add(step);
-        addQstep( particleCount/time, time, w);
-    }
-
-    public JSONArray getQarray() {
-        return Qarray;
     }
 
     public JSONArray getPrtNumberOverTime() {
         return prtNumberOverTime;
+    }
+
+    public JSONArray getQarray() {
+        return Qarray;
     }
 }

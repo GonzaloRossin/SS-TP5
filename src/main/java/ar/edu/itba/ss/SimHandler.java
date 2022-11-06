@@ -3,29 +3,34 @@ package ar.edu.itba.ss;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+
+import static java.lang.Math.round;
 
 public class SimHandler {
     private final List<Particle> particles = new ArrayList<>();
     private final List<Wall> walls = new ArrayList<>();
 
     private double step = 0.001, actualTime = 0;
-    private double tf = 50;
-    private int N = 200, partcleCount = 0;
+    private double tf;
+    private int N = 200, particleCount = 0;
 
-    private double A = 0.30, w = 7.5, D = 3, L = 70;
+    private double A, w, D = 3, L = 70, offset = 0.8;
 
-    public SimHandler() {
+    private CIM cim;
+
+    public SimHandler(double w, double A, double tf) {
+        this.w = w;
+        this.A = A;
+        this.tf = tf;
         generateWalls();
         generateParticles();
-//        particles.add(new Particle(new Vector2(8.30, 30), new Vector2(0, 0), 1, 1));
-//        particles.add(new Particle(new Vector2(15, 30), new Vector2(0, 0), 1, 1));
     }
 
     public void generateParticles() {
         Random r = new Random(0);
         for (int i = 0; i < N;) {
-            double radius = (0.85 + r.nextDouble() * (1.15 - 0.85));
-
+            double radius = 0.85 + i * (1.15 - 0.85) / N;
             Vector2 R = new Vector2(radius + r.nextDouble() * (20 - radius * 2), radius + r.nextDouble() * (70 - radius * 2));
             boolean ok = true;
             for (Particle p : particles) {
@@ -42,9 +47,8 @@ public class SimHandler {
         }
     }
 
-    public Vector2 generateNewLocation() {
-        Random r = new Random(0);
-        double radius = (0.85 + r.nextDouble() * (1.15 - 0.85));
+    public Vector2 generateNewLocation(double radius) {
+        Random r = new Random(1);
         boolean ok = false;
         Vector2 R = null;
         while (!ok) {
@@ -77,34 +81,41 @@ public class SimHandler {
     }
 
     public void initParticlesPositions() {
+        cim = new CIM(particles);
+
         for(Particle p : particles) {
-            p.applyEulerModified(particles, walls, step);
+            List<Particle> neighbours = cim.calculateNeighbours(p);
+            p.applyEulerModified(neighbours, walls, step);
         }
         actualTime += step;
     }
 
-    public void iterate(DataAcumulator dataAcumulator) {
-        int count = 0;
+    public void iterate() {
         for(Particle p : particles) {
-            p.applyBeeman(particles, walls, step);
+
+            List<Particle> neighbours = cim.calculateNeighbours(p);
+
+            p.applyBeeman(neighbours, walls, step);
             if (isOutOfContainer(p)){
-                partcleCount++;
-                count++;
+                particleCount++;
+                p.setOutOfSilo(true);
             }
-            else if (isOutOfMap(p)) {
+            if (isOutOfMap(p)) {
                 respawnParticle(p);
             }
+
+            cim.updateParticle(p);
         }
         for(Wall w: walls) {
             w.oscillate(actualTime);
         }
         actualTime += step;
-        dataAcumulator.addParticleCountStep(actualTime, partcleCount, w);
-        dataAcumulator.addQ( w, actualTime, count/step);
     }
 
     private void respawnParticle(Particle p) {
-        p.setActualR(generateNewLocation());
+        p.setActualR(generateNewLocation(p.getRadius()));
+        p.setActualV(new Vector2(0,0));
+        p.setOutOfSilo(false);
     }
 
     private boolean isOutOfMap(Particle p) {
@@ -147,15 +158,25 @@ public class SimHandler {
         return tf;
     }
 
-    public double getW() {
-        return w;
-    }
-
     public boolean isOutOfContainer(Particle particle){
-        return particle.getActualR().getY() <= 0;
+        return particle.getActualR().getY() <= -particle.getRadius() && !particle.isOutOfSilo();
     }
 
     public void setW(double w) {
         this.w = w;
+        for(Wall wall: walls){
+
+        }
     }
+
+
+
+    public int getParticleCount() {
+        return particleCount;
+    }
+
+    public void setA(double a) {
+        A = a;
+    }
+
 }

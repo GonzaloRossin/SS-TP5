@@ -2,12 +2,16 @@ package ar.edu.itba.ss;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class Particle {
     private Vector2 actualR, lastR = new Vector2(0,0), actualV, actualForce;
     private final double mass, radius;
-    private final double g = 5, Kn = 250, Kt = 500;
+    private final double g = 5, Kn = 500, Kt = 2 * Kn;
     private final int color = 0;
+    private boolean outOfSilo = false;
+
+    private int cellX, cellY, cellIndex;
 
     public Particle(Vector2 actualR, Vector2 actualV, double mass, double radius) {
         this.actualR = actualR;
@@ -18,6 +22,7 @@ public class Particle {
 
     public Vector2 calculateForceSum(List<Particle> particles, List<Wall> walls, Vector2 vel) {
         Vector2 newForce = calculateGravity();
+//        Vector2 newForce = new Vector2(0,0);
 
         // Check overlap with walls, if overlapped calculate force
         for (Wall w : walls) {
@@ -132,5 +137,31 @@ public class Particle {
 
     public void setActualR(Vector2 newR) {
         actualR = newR;
+    }
+
+    public void setActualV(Vector2 newV) {
+        actualV = newV;
+    }
+
+    public int getCellX() {
+        return cellX;
+    }
+
+    public int getCellY() {
+        return cellY;
+    }
+
+    public boolean isOutOfSilo() {
+        return outOfSilo;
+    }
+
+    public void setOutOfSilo(boolean outOfSilo) {
+        this.outOfSilo = outOfSilo;
+    }
+
+    public void setCellCoords(int Mx, int My, double Lx, double Ly, double xOffset, double yOffset) {
+        cellX = (int)Math.floor(((actualR.getX() - xOffset) * Mx) / (Lx));
+        cellY = (int)Math.floor(((actualR.getY() - yOffset) * My) / (Ly));
+        cellIndex = cellX + cellY * Mx;
     }
 }
