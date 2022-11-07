@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+import matplotlib
 import numpy as np
 import pandas as pd
 import math
@@ -23,8 +24,8 @@ def ej1_secondplot(qs, errors):
     frecuencias = [5.0, 10.0, 15.0, 20.0, 30.0, 50.0]
     plt.scatter(frecuencias, qs)
     plt.errorbar(frecuencias, qs, yerr=errors, fmt="o")
-    plt.xlabel("Frequencia", fontsize=16)
-    plt.ylabel("Q [1/s]", fontsize=16)
+    plt.xlabel("Frecuencia", fontsize=22)
+    plt.ylabel("Q [1/s]", fontsize=22)
     plt.show()
 
 
@@ -32,8 +33,8 @@ def ej2(qs, errors):
     frecuencias = [3, 4, 5, 6]
     plt.scatter(frecuencias, qs)
     plt.errorbar(frecuencias, qs, yerr=errors, fmt="o")
-    plt.xlabel("D [cm]", fontsize=16)
-    plt.ylabel("Q [1/s]", fontsize=16)
+    plt.xlabel("D [cm]", fontsize=22)
+    plt.ylabel("Q [1/s]", fontsize=22)
     plt.show()
 
 
@@ -70,8 +71,14 @@ def calculate_errors(path1, path2, path3, frecuencias):
     return qaverage, errors
 
 
+
+font = {'family' : 'normal',
+        'size'   : 20}
+matplotlib.rc('font', **font)
 qAverage, errors = calculate_errors('Qlist0.json', 'Qlist1.json', 'Qlist2.json', ['5.0', '10.0', '15.0', '20.0', '30.0', '50.0'])
 qAverage2, errors2 = calculate_errors('QlistDoor0.json', 'QlistDoor1.json', 'QlistDoor2.json', ['3.0', '4.0', '5.0', '6.0'])
+print("average= ",qAverage2)
+print("errors= ",errors2)
 ej1_secondplot(qAverage, errors)
 ej2(qAverage2, errors2)
 #particlesvsT()
