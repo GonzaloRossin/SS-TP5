@@ -5,13 +5,14 @@ import math
 
 
 def particlesvsT():
-    df = pd.read_json('ParticlesvsTime2.json')
-    plt.plot(df['time'], df['5.0'], label='5')
-    plt.plot(df['time'], df['10.0'], label='10')
-    plt.plot(df['time'], df['15.0'], label='15')
-    plt.plot(df['time'], df['20.0'], label='20')
-    plt.plot(df['time'], df['30.0'], label='30')
-    plt.plot(df['time'], df['50.0'], label='50')
+    df = pd.read_json('ParticlesvsTime0.json')
+    frecuencias = ['5.0', '10.0', '15.0', '20.0', '30.0', '50.0']
+    for frecuencia in frecuencias:
+        list1 = list(df[frecuencia])
+        list1 = filterNan(list1)
+        list2 = list(df['time' + frecuencia])
+        list2 = filterNan(list2)
+        plt.plot(list2, list1, label='w = ' + frecuencia)
     plt.legend()
     plt.xlabel("Tiempo [S] ", fontsize=16)
     plt.ylabel("Partículas", fontsize=16)
@@ -22,23 +23,19 @@ def ej1_secondplot(qs, errors):
     frecuencias = [5.0, 10.0, 15.0, 20.0, 30.0, 50.0]
     plt.scatter(frecuencias, qs)
     plt.errorbar(frecuencias, qs, yerr=errors, fmt="o")
-    plt.xlabel("Frequency", fontsize=16)
-    plt.ylabel("Q", fontsize=16)
+    plt.xlabel("Frequencia", fontsize=16)
+    plt.ylabel("Q [1/s]", fontsize=16)
     plt.show()
 
 
-def ej2(particles, times, ds):
-    qs = []
-    q_errors = []
-    for i in range(len(ds)):
-        aux = np.polyfit(times[i], particles[i], 1)
-        qs.append(aux[1] / aux[0])
-        q_errors.append(i + 1)
-    plt.scatter(ds, qs)
-    plt.errorbar(ds, qs, yerr=q_errors, fmt="o")
-    plt.xlabel("Caudal", fontsize=16)
-    plt.ylabel("Q", fontsize=16)
+def ej2(qs, errors):
+    frecuencias = [3, 4, 5, 6]
+    plt.scatter(frecuencias, qs)
+    plt.errorbar(frecuencias, qs, yerr=errors, fmt="o")
+    plt.xlabel("D [cm]", fontsize=16)
+    plt.ylabel("Q [1/s]", fontsize=16)
     plt.show()
+
 
 def filterNan(frequencyList):
     aux = []
@@ -48,11 +45,11 @@ def filterNan(frequencyList):
 
     return aux
 
-def calculate_errors():
-    frecuencias = ['5.0', '10.0', '15.0', '20.0', '30.0', '50.0']
-    df1 = pd.read_json('Qlist0.json')
-    df2 = pd.read_json('Qlist1.json')
-    df3 = pd.read_json('Qlist2.json')
+
+def calculate_errors(path1, path2, path3, frecuencias):
+    df1 = pd.read_json(path1)
+    df2 = pd.read_json(path2)
+    df3 = pd.read_json(path3)
     errors = []
     qaverage = []
     for frecuencia in frecuencias:
@@ -69,8 +66,12 @@ def calculate_errors():
         std = np.std(qs)
         errors.append(std)
         qaverage.append(np.average(qs))
-    
+
     return qaverage, errors
 
-qAverage, errors = calculate_errors()
+
+qAverage, errors = calculate_errors('Qlist0.json', 'Qlist1.json', 'Qlist2.json', ['5.0', '10.0', '15.0', '20.0', '30.0', '50.0'])
+qAverage2, errors2 = calculate_errors('QlistDoor0.json', 'QlistDoor1.json', 'QlistDoor2.json', ['3.0', '4.0', '5.0', '6.0'])
 ej1_secondplot(qAverage, errors)
+ej2(qAverage2, errors2)
+#particlesvsT()

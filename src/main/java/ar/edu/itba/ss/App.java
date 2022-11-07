@@ -49,8 +49,6 @@ public class App
 
     public static void varyW() {
         double[] wList = {5, 10, 15, 20, 30, 50};
-//        double[] wList = { 30 };
-//        DataAcumulator dataAcumulator = new DataAcumulator(wList);
         JsonPrinter jp = new JsonPrinter();
         for (int j = 0; j < 3; j++) {
             for (double v : wList) {
@@ -78,14 +76,12 @@ public class App
             PrintWriter pw3 = openFile("plots/ParticlesvsTime" + j + ".json");
             PrintWriter pw2 = openFile("plots/Qlist" + j + ".json");
 
-//        jp.createParticleArray(dAccum);
+
             writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
             writeToFile(pw2, jp.getQarray().toJSONString());
 
             System.out.println("Finished j = " + j);
         }
-//        dataAcumulator.calculateAverageList();
-//        dAccum.calculateQlist();
 
     }
     public static void simulation() {
