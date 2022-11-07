@@ -11,7 +11,7 @@ public class XYZmain {
         double[] wList = {5, 10, 15, 20, 30, 50};
         for(double w : wList){
             PrintWriter pw = openFile("output/system"+w+".xyz");
-            SimHandler sh = new SimHandler(w,0.15, 200);
+            SimHandler sh = new SimHandler(w,0.15, 200, 3);
 
             writeToFile(pw, sh.printSystem());
             double outerStep = 0.05, lastTime = sh.getActualTime();
