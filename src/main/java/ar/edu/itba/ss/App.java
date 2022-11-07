@@ -12,33 +12,39 @@ public class App
     public static void main( String[] args )
     {
 //        simulation();
-//        doorSimulation();
-        varyW();
+        doorSimulation();
+//        varyW();
     }
     public static void doorSimulation(){
         double[] doorSizes = {3, 4, 5, 6};
-        double[] wList = {5};
-
-        DataAcumulator dataAcumulator = new DataAcumulator();
         JsonPrinter jp = new JsonPrinter();
-        for(double doorSize: doorSizes) {
+        for (int i = 0; i < 3; i++) {
+            for(double doorSize: doorSizes) {
 
-            for (int i = 0; i < 3; i++) {
-                SimHandler sh = new SimHandler(5, doorSize, 100);
+                DataAcumulator dAccum = new DataAcumulator();
+                SimHandler sh = new SimHandler(15, 0.15, 50, doorSize);
 
                 double outerStep = 0.05, lastTime = sh.getActualTime();
                 sh.initParticlesPositions();
                 while (sh.getActualTime() < sh.getTf()) {
-                    sh.iterate();
-
+                    if (sh.iterate()) {
+                        dAccum.addParticleCountStep(sh.getActualTime(), sh.getParticleCount());
+                    }
                     if (sh.getActualTime() - lastTime > outerStep) {
                         lastTime = sh.getActualTime();
                     }
-
                 }
-                dataAcumulator.setTimeArrayCompleted(true);
+                jp.addQOverTimeDoor(doorSize, dAccum.getTimeArray(), dAccum.getQ());
+                System.out.print("" + doorSize + " ");
             }
+            PrintWriter pw2 = openFile("plots/QlistDoor" + i + ".json");
+
+//        jp.createParticleArray(dAccum);
+            writeToFile(pw2, jp.getQarray().toJSONString());
+
+            System.out.println("Finished i = " + i);
         }
+
     }
 
     public static void varyW() {
@@ -49,7 +55,7 @@ public class App
         for (int j = 0; j < 3; j++) {
             for (double v : wList) {
                 DataAcumulator dAccum = new DataAcumulator();
-                SimHandler sh = new SimHandler(v,0.15, 50);
+                SimHandler sh = new SimHandler(v,0.15, 50, 3);
                 double outerStep = 0.05, lastTime = sh.getActualTime();
                 sh.initParticlesPositions();
                 while (sh.getActualTime() < sh.getTf()) {
@@ -84,7 +90,7 @@ public class App
     }
     public static void simulation() {
         PrintWriter pw = openFile("output/system.xyz");
-        SimHandler sh = new SimHandler(30, 0.15, 50);
+        SimHandler sh = new SimHandler(30, 0.15, 50, 3);
 
         writeToFile(pw, sh.printSystem());
 
