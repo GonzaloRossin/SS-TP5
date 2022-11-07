@@ -19,10 +19,11 @@ public class SimHandler {
 
     private CIM cim;
 
-    public SimHandler(double w, double A, double tf) {
+    public SimHandler(double w, double A, double tf, double D) {
         this.w = w;
         this.A = A;
         this.tf = tf;
+        this.D = D;
         generateWalls();
         generateParticles();
     }

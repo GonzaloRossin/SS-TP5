@@ -54,4 +54,13 @@ public class JsonPrinter {
             prtNumberOverTime.add(qStep);
         }
     }
+
+    public void addQOverTimeDoor(double doorSize, List<Double> timeArray, List<Double> q) {
+        for(int i = 0; i < q.size(); i++){
+            JSONObject qStep = new JSONObject();
+            qStep.put("timeDoor" + doorSize, timeArray.get(i));
+            qStep.put(doorSize, q.get(i));
+            Qarray.add(qStep);
+        }
+    }
 }
