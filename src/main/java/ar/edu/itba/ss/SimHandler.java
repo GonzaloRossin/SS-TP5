@@ -28,7 +28,7 @@ public class SimHandler {
     }
 
     public void generateParticles() {
-        Random r = new Random(1);
+        Random r = new Random();
         for (int i = 0; i < N;) {
             double radius = 0.85 + i * (1.15 - 0.85) / N;
             Vector2 R = new Vector2(radius + r.nextDouble() * (20 - radius * 2), radius + r.nextDouble() * (70 - radius * 2));
@@ -48,7 +48,7 @@ public class SimHandler {
     }
 
     public Vector2 generateNewLocation(double radius) {
-        Random r = new Random(1);
+        Random r = new Random();
         boolean ok = false;
         Vector2 R = null;
         while (!ok) {

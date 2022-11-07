@@ -42,14 +42,14 @@ public class App
     }
 
     public static void varyW() {
-        double[] wList = {5, 10, 15};
-//        double[] wList = { 15 };
+        double[] wList = {5, 10, 15, 20, 30, 50};
+//        double[] wList = { 30 };
 //        DataAcumulator dataAcumulator = new DataAcumulator(wList);
         JsonPrinter jp = new JsonPrinter();
-        for (double v : wList) {
-            DataAcumulator dAccum = new DataAcumulator();
-            for (int j = 0; j < 1; j++) {
-                SimHandler sh = new SimHandler(v,0.15, 100);
+        for (int j = 0; j < 3; j++) {
+            for (double v : wList) {
+                DataAcumulator dAccum = new DataAcumulator();
+                SimHandler sh = new SimHandler(v,0.15, 50);
                 double outerStep = 0.05, lastTime = sh.getActualTime();
                 sh.initParticlesPositions();
                 while (sh.getActualTime() < sh.getTf()) {
@@ -61,7 +61,7 @@ public class App
                     }
                 }
                 // Calculo de caudal, ya tengo toda la informacion de la tirada
-                System.out.print("" + j + " ");
+                System.out.print("" + v + " ");
 
                 // Aca al jp
                 jp.addQOverTime(v, dAccum.getTimeArray(), dAccum.getQ());
@@ -69,21 +69,22 @@ public class App
             }
             // Calculo del error de Q para cierto w
 
+            PrintWriter pw3 = openFile("plots/ParticlesvsTime" + j + ".json");
+            PrintWriter pw2 = openFile("plots/Qlist" + j + ".json");
 
-            System.out.println("Finished w = " + v);
+//        jp.createParticleArray(dAccum);
+            writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
+            writeToFile(pw2, jp.getQarray().toJSONString());
+
+            System.out.println("Finished j = " + j);
         }
 //        dataAcumulator.calculateAverageList();
 //        dAccum.calculateQlist();
-        PrintWriter pw3 = openFile("plots/ParticlesvsTime2.json");
-        PrintWriter pw2 = openFile("plots/Qlist.json");
 
-//        jp.createParticleArray(dAccum);
-        writeToFile(pw3, jp.getPrtNumberOverTime().toJSONString());
-        writeToFile(pw2, jp.getQarray().toJSONString());
     }
     public static void simulation() {
         PrintWriter pw = openFile("output/system.xyz");
-        SimHandler sh = new SimHandler(10, 0.15, 100);
+        SimHandler sh = new SimHandler(30, 0.15, 50);
 
         writeToFile(pw, sh.printSystem());
 

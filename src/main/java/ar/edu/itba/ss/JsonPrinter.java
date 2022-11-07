@@ -38,9 +38,9 @@ public class JsonPrinter {
     }
 
     public void addQOverTime(Double w, List<Double> time, List<Double> q) {
-        for(int i = 0; i < q.size() - 1; i++){
+        for(int i = 0; i < q.size(); i++){
             JSONObject qStep = new JSONObject();
-            qStep.put("time", time.get(i));
+            qStep.put("time" + w, time.get(i));
             qStep.put(w.toString(), q.get(i));
             Qarray.add(qStep);
         }
